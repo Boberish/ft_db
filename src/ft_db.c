@@ -1,5 +1,42 @@
 #include "ft_db.h"
 
+void    all_puts(t_ent *ent, FILE *fp)
+{
+        fputs(ent->key, fp);
+        fputc('\n', fp);
+        fputs(ent->data, fp);
+        fputc('\n', fp);
+}
+
+void    db_2file(t_db *db)
+{
+    FILE    *fp;
+    t_ent   *t;
+
+    fp = fopen("derpbase.db", "w+");
+    t = db->ents;
+    while (t)
+    {
+        all_puts(t, fp);
+        t = t->next;
+    }
+    fclose(fp);
+}
+
+void    print_ent(t_db *db, char *key)
+{
+    t_ent   *t;
+
+    t = db->ents;
+	t = t->next;
+    while (t && ft_strcmp(t->key, key) != 0)
+        t = t->next;
+    if (t)
+        printf("For key: %s\nData is: %s\n", t->key, t->data);
+    else
+        printf("There was no entry for %s\n", key);
+}
+
 void    print_all(t_db *db)
 {
     t_ent   *t;
@@ -87,12 +124,12 @@ int    check_query(int ac, char **av, t_db *db)
 			print_all(db);
 		}
 		else if (strcmp(av[i], "print") == 0 && i++)
-            printf("print one");//print_ent(db, av[i++]);
+            print_ent(db, av[i++]);
         else if (strcmp(av[i], "add") == 0 && i++)
         {
-			printf("add");
-            add_ent(db, av[i], av[i + 1]);
-           // i += 2;
+			printf("adding\n");
+            i += 2;
+            add_ent(db, av[i - 2], av[i - 1]);
         }
         else if (strcmp(av[i], "edit") == 0 && i++)
         {
@@ -122,10 +159,8 @@ int main(int ac, char** av)
     t_db    *db;
 
     FILE *fp = fopen("derpbase.db", "r+");
-	if (fp != NULL)
-		db = init_db(fp);
-	else
-		 fp = fopen("derpase.db", "ab+"); 
+	db = init_db(fp);
+	fclose(fp);
 	if (ac == 1)
         printf("%s\n", "use -help for help");
     else
@@ -134,9 +169,9 @@ int main(int ac, char** av)
      if(check_query(ac, av, db) == 0)
 		printf("done");   
        // db = init_db(fp);
-      //  fclose(fp);
       //  ft_putendl("get here?");
-      //  db_2file(db);
+        db_2file(db);
+
     }
     return(0);
 }

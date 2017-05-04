@@ -6,11 +6,14 @@
 # include <unistd.h>
 # include "libft.h"
 # define DE db->ents
+# define 
+
 
 typedef struct	s_ent
 {
 char			*key;
-void			*data;
+char			**data;
+size_t			dlen;
 struct s_ent	*next;
 }				t_ent;
 
@@ -22,17 +25,20 @@ t_ent			*ents;
 
 FILE		*init_db_file(void);
 t_db		*init_db(FILE *fp);
-t_ent		*init_ent(char *key, void *data);
+t_ent		*init_ent(char *key, char **data);
 void		print_help(void);
 void		print_err(void);
-int			check_query(int ac, char **av, t_db *db);
+int		check_query(int ac, char **av, t_db *db);
 void		print_all(t_db *db);
 void		print_ent(t_db *db, char *key);
-void		add_ent(t_db *db, char *key, void *data);
-void		edit_ent(t_db *db, char *key, void *data);
+void		add_ent(t_db *db, char *key, char **data);
+void		edit_ent(t_db *db, char *key, char **data);
 void		delete_ent(t_db *db, char *key);
 void		delete_all(t_db *db);
 void		db_2file(t_db *db);
 void		all_puts(t_ent *ent, FILE *fp);
+void		*db_memalloc(size_t size);
+size_t		db_numlen(intmax_t nb, int bse);
+char		*db_itoa(intmax_t nbg);
 
 #endif
